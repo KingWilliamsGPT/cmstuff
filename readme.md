@@ -15,20 +15,20 @@ The last set of functions provide shortcuts for common tasks. `cdesktop` returns
 ## Example
 
 
-Function: filterstr
+Function: `filterstr`
 This function takes in three parameters:
 
-s - a string to filter out attributes containing this value
+`s` - a string to filter out attributes containing this value
 object - the object to be filtered
-ignore_privates - a boolean value indicating whether private attributes (those starting with an underscore) should be ignored (default is True)
+`ignore_privates` - a boolean value indicating whether private attributes (those starting with an underscore) should be ignored (default is True)
 The function iterates through the attributes of the object and filters out those that contain the s value. It returns a list of the filtered attributes.
 
 Parameters
-s (required) - a string to filter out attributes containing this value
-object (required) - the object to be filtered
-ignore_privates (optional) - a boolean value indicating whether private attributes (those starting with an underscore) should be ignored (default is True)
+`s` (required) - a string to filter out attributes containing this value
+`object` (required) - the object to be filtered
+`ignore_privates` (optional) - a boolean value indicating whether private attributes (those starting with an underscore) should be ignored (default is True)
 Return Value
-ret - a list of the filtered attributes
+`ret` - a list of the filtered attributes
 
 **Example Usage**
 
