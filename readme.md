@@ -66,6 +66,6 @@ print(filtered_attrs)  # Output: ['full_name', 'name', 'other_name']
 
 
 ## Author
-  You can check out my email at williamusanga22@gmail.com :smiley:
+  You can reach me by mail at williamusanga22@gmail.com :smiley:
 
 
