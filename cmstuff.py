@@ -43,9 +43,12 @@ import sys
 import io
 import warnings
 import subprocess
+import enum
+import inspect
 from os.path import join, expanduser, exists, dirname
 from pprint import pprint
 from types import ModuleType
+from typing import Union
 from importlib import import_module
 
 cls = lambda n=38:print('\n'*n)
@@ -384,3 +387,20 @@ def filterout_base_attrs(object):
 
 fibar = filterout_base_attrs # FIlterout Base AttRs
 __all__.append('fibar')
+
+
+# -----------------------------------------------------------------------------------
+# logging realated
+
+
+class CallerStack(enum.Enum):
+    BASE = 0       # implies this lib cmstuff.py
+    ME = 1        # implies the lib that directly imports cmstuff
+    MY_CALLER = 2 # implies the lib that imports the lib that imports cmstuff 
+
+
+def get_caller_module(*, _stack:Union[int, CallerStack]=1):
+    frame_info = inspect.stack()[getattr(_stack, 'value', _stack)]
+    return inspect.getmodule(frame_info.frame)
+
+
