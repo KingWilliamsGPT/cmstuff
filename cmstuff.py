@@ -1,9 +1,6 @@
 '''Common stuff that I use that may not be yet implemented in python.
 
     I just use them as shortcut, and they speed of my debug workflow by 30%
-
-    
-    
 '''
 
 __author__ = ('Williams'
@@ -30,8 +27,8 @@ __all__ = [
 'from_import',
 #----------------------
 'cdesktop', 'pypath',
-'desktop','HOME', 'WORK_AREA',
-'cls', 'setargs', 'opendir', 'search_files'
+'desktop','HOME',
+'cls', 'setargs', 'opendir', 'search_files',
 #----------------------
 'concat',
 ]
@@ -321,7 +318,7 @@ def cdesktop():
     else:   # quirk mode
         for folder in os.listdir(HOME):
             if folder.lower() == 'desktop':
-                os.chdir(join(home, folder))
+                os.chdir(join(HOME, folder))
                 return os.getcwd()
         else:
             raise FileNotFoundError('On {platform} but could not find desktop'.format(
@@ -387,62 +384,3 @@ def filterout_base_attrs(object):
 
 fibar = filterout_base_attrs # FIlterout Base AttRs
 __all__.append('fibar')
-    
-from os import getcwd, chdir
-class Chdir():
-    '''Change and keep track of directory.
-
-    Changing directory like a mad man is cool but even cooler if you don't
-    need to keep track of were you have been.'''
-    #top, bottom, back, forward, cd-current
-    pass
-
-
-# createfile func() --> should create a file easy way to create empty files
-# a functin for finding attributes using regular expression 
-
-#######################################################################
-#######################################################################
-# andrioid
-WORK_AREA = "/storage/emulated/0/Alarms"
-def _on_android():
-    try:
-        if sys.platform.lower().startswith('linux'):
-            for env in os.environ:
-                if 'android' in env.lower(): break
-            else:
-                raise AssertionError('plaform is for android')
-    except AssertionError:
-        return False
-    else:
-        return True
-
-
-class android_tools(object):    
-    @staticmethod
-    def work():
-        """Change dir to my android work area."""
-        os.chdir(WORK_AREA)
-        return WORK_AREA
-    
-    @staticmethod
-    def getmod(modname, dst=WORK_AREA):
-        from zipfile import ZipFile
-        
-        assert _on_android
-        module = _getmod(modname)
-        assert hasattr(modname, '__file__'), '%s  is a binary file' % modname
-        with ZipFile(dirname(modname.__file__)) as target_mod:
-            target_mod.extract(modname+'.py', dst)
-
-    @staticmethod
-    def get():
-        for method in mefun(android_tools):
-            if method == 'get': continue
-            globals()[method] = getattr(android_tools, method)
-
-#######################################################################
-#######################################################################
-            
-if _on_android():
-    android_tools.get()
