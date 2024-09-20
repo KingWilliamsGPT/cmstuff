@@ -1,6 +1,7 @@
 from cmstuff import get_caller_module, CallerStack, get_logger
 
-lg = get_logger(level='debug', outputs=('console', 'rotatefile'))
+
+lg = get_logger(level='debug', outputs=('console', 'rotatefile'), propagate=True)
 
 
 def test():
@@ -16,5 +17,5 @@ if __name__ == '__main__':
 
     lg.debug('this is a debug')
     lg.warning('this is a warning')
-    lg.error('this is an error')
-    lg.critical('this is a critical')
+    # lg.error('this is an error')
+    # lg.critical('this is a critical')

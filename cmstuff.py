@@ -31,6 +31,10 @@ __all__ = [
 'cls', 'setargs', 'opendir', 'search_files',
 #----------------------
 'concat',
+#----------------------
+'get_logger',
+'get_caller_module',
+'CallerStack',
 ]
 
 # from version 1.0 few changes have been made `exec` -> getattr,
@@ -442,7 +446,10 @@ def get_logger(
             
             # for rotating file
             maxBytes:int=DEFAULT_MAX_BYTES,
-            backupCount:int=DEFAULT_BACKUP_COUNT
+            backupCount:int=DEFAULT_BACKUP_COUNT,
+
+            # more
+            propagate=False, # does not obey parent or root configs by default
         ):
     '''Used to create custom logger with reasonable default settings.
     
@@ -460,6 +467,7 @@ def get_logger(
         raise TypeError(f'Unknown logging "{level}" level used.')
     
     logger.setLevel(level)
+    logger.propagate = propagate
 
     format = format or '''\
 [{module}:{lineno}] [{asctime}] [{levelname}]
