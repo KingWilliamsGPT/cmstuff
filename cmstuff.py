@@ -45,10 +45,12 @@ import warnings
 import subprocess
 import enum
 import inspect
+import logging
+from logging.handlers import RotatingFileHandler
 from os.path import join, expanduser, exists, dirname
 from pprint import pprint
 from types import ModuleType
-from typing import Union
+from typing import T, Union, Literal
 from importlib import import_module
 
 cls = lambda n=38:print('\n'*n)
@@ -392,6 +394,29 @@ __all__.append('fibar')
 # -----------------------------------------------------------------------------------
 # logging realated
 
+LOGGING_LEVELS = [
+    logging.DEBUG,
+    logging.INFO,
+    logging.WARNING,
+    logging.ERROR,
+    logging.CRITICAL,
+]
+
+LogLevel = Literal[LOGGING_LEVELS]
+
+HANDY_OUTPUTS = [
+    'console',
+    'file',
+    'rotatefile',
+    'null',
+]
+
+
+MB = 1048576
+DEFAULT_MAX_BYTES =  1*MB
+DEFAULT_BACKUP_COUNT = 5
+DEFAULT_LOG_FILE = 'logs.log'
+
 
 class CallerStack(enum.Enum):
     BASE = 0       # implies this lib cmstuff.py
@@ -404,3 +429,58 @@ def get_caller_module(*, _stack:Union[int, CallerStack]=1):
     return inspect.getmodule(frame_info.frame)
 
 
+def get_logger(
+            name:str = None, 
+            level:LogLevel = logging.WARNING, 
+            file:str = DEFAULT_LOG_FILE, 
+            format:str = '', format_style:str = '{', date_format:str = '%d %b %Y %I:%M%p',
+            outputs:Union[set, frozenset, tuple] = frozenset(('console', )),
+            
+            # for ratating file
+            maxBytes:int=DEFAULT_MAX_BYTES,
+            backupCount:int=DEFAULT_BACKUP_COUNT
+        ):
+
+    caller = get_caller_module(_stack=CallerStack.MY_CALLER)    # get caller module
+    default_name = f'[{getattr(caller, "__file__", "CM_LOGGER")}]'
+    logger = logging.getLogger(str(name).strip() or default_name)
+    
+    if level not in LOGGING_LEVELS:
+        raise TypeError(f'Unknown logging "{level}" level used.')
+    
+    logger.setLevel(level)
+
+    format = format or '''\
+[{module}:{lineno}] [{asctime}] [{levelname}]
+[{message}]
+
+'''
+    formatter = logging.Formatter(format, datefmt=date_format, style=format_style)
+    file = str(file.strip())
+
+    
+    outputs = frozenset(outputs)
+    if ('file' in outputs or 'rotatefile' in outputs) and not file:
+        logging.warning('file handler settings will be ignored because `file` is empty')
+
+    for output in outputs:
+        out = None
+
+        if output == 'console':
+            out = logging.StreamHandler()
+        elif output == 'file' and file:
+            out = logging.FileHandler(file)
+        elif output == 'rotatefile' and file:
+            out = RotatingFileHandler(
+                filename=file,
+                maxBytes=maxBytes,
+                backupCount=backupCount,
+            )                
+        
+        if out:
+            out.setLevel(level)
+            out.setFormatter(formatter)
+            logger.addHandler(out)
+
+
+    return logger
