@@ -402,6 +402,10 @@ LOGGING_LEVELS = [
     logging.CRITICAL,
 ]
 
+logging_level_str = ('debug', 'info', 'warning', 'error', 'critical')
+
+_l = dict(zip(logging_level_str, LOGGING_LEVELS))
+
 LogLevel = Literal[LOGGING_LEVELS]
 
 HANDY_OUTPUTS = [
@@ -436,15 +440,22 @@ def get_logger(
             format:str = '', format_style:str = '{', date_format:str = '%d %b %Y %I:%M%p',
             outputs:Union[set, frozenset, tuple] = frozenset(('console', )),
             
-            # for ratating file
+            # for rotating file
             maxBytes:int=DEFAULT_MAX_BYTES,
             backupCount:int=DEFAULT_BACKUP_COUNT
         ):
-
+    '''Used to create custom logger with reasonable default settings.
+    
+    get_logger(level='warning', file='logs.log', outputs=('console', 'file')) is just the same as get_logger()
+    '''
     caller = get_caller_module(_stack=CallerStack.MY_CALLER)    # get caller module
     default_name = f'[{getattr(caller, "__file__", "CM_LOGGER")}]'
     logger = logging.getLogger(str(name).strip() or default_name)
     
+    if type(level) == str:
+        level = level.lower()
+        level = _l[level]
+
     if level not in LOGGING_LEVELS:
         raise TypeError(f'Unknown logging "{level}" level used.')
     

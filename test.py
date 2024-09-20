@@ -1,6 +1,6 @@
 from cmstuff import get_caller_module, CallerStack, get_logger
 
-lg = get_logger(outputs=('console', 'rotatefile'))
+lg = get_logger(level='debug', outputs=('console', 'rotatefile'))
 
 
 def test():
