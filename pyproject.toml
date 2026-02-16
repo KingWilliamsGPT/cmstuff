@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cmstuff"
+version = "1.1.0"
+description = "Common Python shortcuts and utilities that speed up debug workflows"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.6"
+authors = [
+    {name = "Williams", email = "williamusanga22@gmail.com"},
+]
+keywords = ["utilities", "shortcuts", "debugging", "introspection", "logging"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/Williams/cmstuff"
+Issues = "https://github.com/Williams/cmstuff/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
